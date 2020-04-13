@@ -1,0 +1,4 @@
+Bundle-Name: rip-portlet
+Bundle-SymbolicName: com.test
+Bundle-Version: 1.0.0
+Export-Package: com.test.constants
