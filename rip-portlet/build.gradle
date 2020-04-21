@@ -14,6 +14,8 @@ dependencies {
 	compileOnly group: "javax.servlet", name: "javax.servlet-api"
 	compileOnly group: "jstl", name: "jstl"
 	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"
-
+	compileOnly project(":modules:rip-service-builder:rip-service-builder-service")
+	compileOnly project(":modules:rip-service-builder:rip-service-builder-api")
+	
 	cssBuilder group: "com.liferay", name: "com.liferay.css.builder", version: "3.0.2"
 }

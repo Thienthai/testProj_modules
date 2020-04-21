@@ -12,23 +12,38 @@
 	    <th>Room</th>
 	    <th>Name</th>
 	    <th>Host</th>
+	    <th>Period</th>
 	    <th>Leave Date</th>
 	    <th>Place</th>
 	    <th>Show</th>
 	  </tr>
+	  <%
+	  List<ripReservation> entries = (List<ripReservation>) renderRequest.getAttribute("entries");
+		if(entries != null){
+			int number = entries.size();
+			for(int i = 0;i<number;i++)
+			{
+	  %>
 	  <tr>
-	  <!--
-	    <td>3</td>
-	    <td>1404</td>
-	    <td>Test</td>
-	    <td>Test</td>
-	    <td>04/04/2020</td>
-	    <td>Gantin</td>
-	    <td>N</td>
-	  -->
+	    <td><%= entries.get(i).getFloor() %></td>
+	    <td><%= entries.get(i).getRoom() %></td>
+	    <td><aui:a id="editPageButton" href="#" ><%= entries.get(i).getName() %></aui:a></td>
+	    <td><%= entries.get(i).getHost() %></td>
+	    <td><%= entries.get(i).getRoom_number() %> days</td>
+	    <td><%= entries.get(i).getLeave_date()  %></td>
+	    <td><%= entries.get(i).getPlace() %></td>
+	    <td><%= entries.get(i).getShow() %></td>
+
 	  </tr>
+	  <%
+			}
+		}else{
+			%>
+			<span id="noResult">No Result</span>
+			<%
+		}
+	  %>
 	</table>
-	<span id="noResult">No Result</span>
 	<hr>
 </div>
 
@@ -68,4 +83,5 @@ popupButton.on('click',
                  },['aui-base','liferay-util-window'] );
 	}
 );
+
 </aui:script>

@@ -42,11 +42,10 @@
 		        <aui:input inlineField="true" label="Disable" name="showOption"  type="radio" value="Disable" />
 			</td>
 			<td>
-				<th>Period</th>
+				<th>Number</th>
 			</td>
 			<td style="padding: 19px;">
-				<aui:input style="float: left;width: 101px;margin-right: 12px;" label="" name="roomNumber"  type="number" value="1" />
-				<span>days</span>
+				<aui:input label="" name="roomNumber"  type="number" value="1" />
 			</td>
 	</tr>
 	<tr>
@@ -168,14 +167,3 @@ A.one('#<portlet:namespace/>cancelButton').on('click', function(event) {
     Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
 });
 </aui:script>
-
-
-
-
-
-
-
-
-
-
-
