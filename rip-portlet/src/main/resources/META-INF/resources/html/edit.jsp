@@ -30,11 +30,15 @@
 	});
 </aui:script>
 <portlet:actionURL name="editWritePage" var="getAddPage"></portlet:actionURL>
+<portlet:actionURL name="deleteList" var="deleteurl">
+	<portlet:param name="myId" value="<%= request.getParameter("myId") %>"/>
+</portlet:actionURL>
 
 <aui:form action="<%= getAddPage %>">
 <table id="addForm" style="width: 90%; padding-left: 25px;">
 	<tr>
 			<td>
+				<aui:input style="display:none" type="text" name="myId" label="" value="<%= request.getParameter("myId") %>"></aui:input>
 				<th>Show Enable</th>
 			</td>
 			<td style="padding: 19px;">
@@ -176,8 +180,10 @@
 		</td>
 	</tr>
 </table>
-<aui:button type="Submit" style="background-color: #315cbc;color: white;margin-left: 27px;margin-top: 12px;margin-bottom: 10px;" id="submitButton" value="Submit" />
+<aui:button type="Submit" style="background-color: #315cbc;color: white;margin-left: 27px;margin-top: 12px;margin-bottom: 10px;" id="submitButton" value="Update" />
+<aui:button onClick="<%= deleteurl.toString() %>" style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;background-color: #ea6c6c;color: white;" id="deleteButton" value="Delete"/>
 <aui:button style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;" id="cancelButton" value="Cancel"/>
+
 </aui:form>
 
 <aui:script use="node, event">

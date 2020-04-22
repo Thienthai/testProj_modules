@@ -27,12 +27,13 @@
 	  %>
 	<portlet:renderURL var="editPageURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
 		<portlet:param name="mvcPath" value="/html/edit.jsp"/>
+		<portlet:param name="myId" value="<%= Long.toString(entries.get(i).getId()) %>"/>
 		<portlet:param name="Floor" value="<%= entries.get(i).getFloor() %>"/>
 		<portlet:param name="Room" value="<%= entries.get(i).getRoom() %>"/>
 		<portlet:param name="Name" value="<%= entries.get(i).getName() %>"/>
 		<portlet:param name="Room_number" value="<%= Integer.toString(entries.get(i).getRoom_number()) %>"/>
 		<portlet:param name="Leave_date" value="<%= entries.get(i).getLeave_date() %>"/>
-		<portlet:param name="Place" value="<%= entries.get(i).getFloor() %>"/>
+		<portlet:param name="Place" value="<%= entries.get(i).getPlace() %>"/>
 		<portlet:param name="Show" value="<%= entries.get(i).getShow() %>"/>
 		<portlet:param name="Host" value="<%= entries.get(i).getHost() %>"/>
 	</portlet:renderURL>
