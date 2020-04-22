@@ -60,6 +60,8 @@ public class RipPortlet extends MVCPortlet {
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		
+		System.out.println(ParamUtil.getString(renderRequest, "floor"));
+		
 		List<ripReservation> rip = null;
 		
 		rip = _ripLocalService.getripReservations(0, _ripLocalService.getripReservationsCount());
@@ -67,6 +69,12 @@ public class RipPortlet extends MVCPortlet {
 		renderRequest.setAttribute("entries", rip);
 		
 		super.render(renderRequest, renderResponse);
+	}
+	
+	public void editWritePage(ActionRequest actionRequest,ActionResponse actionResponse) {
+		
+		System.out.println("test add");
+		
 	}
 
 	public void addWritePage(ActionRequest actionRequest,ActionResponse actionResponse) {

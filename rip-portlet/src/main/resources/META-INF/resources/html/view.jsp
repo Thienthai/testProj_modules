@@ -23,18 +23,55 @@
 			int number = entries.size();
 			for(int i = 0;i<number;i++)
 			{
+				String myId = Long.toString(entries.get(i).getId());
 	  %>
+	<portlet:renderURL var="editPageURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+		<portlet:param name="mvcPath" value="/html/edit.jsp"/>
+		<portlet:param name="Floor" value="<%= entries.get(i).getFloor() %>"/>
+		<portlet:param name="Room" value="<%= entries.get(i).getRoom() %>"/>
+		<portlet:param name="Name" value="<%= entries.get(i).getName() %>"/>
+		<portlet:param name="Room_number" value="<%= Integer.toString(entries.get(i).getRoom_number()) %>"/>
+		<portlet:param name="Leave_date" value="<%= entries.get(i).getLeave_date() %>"/>
+		<portlet:param name="Place" value="<%= entries.get(i).getFloor() %>"/>
+		<portlet:param name="Show" value="<%= entries.get(i).getShow() %>"/>
+		<portlet:param name="Host" value="<%= entries.get(i).getHost() %>"/>
+	</portlet:renderURL>
 	  <tr>
 	    <td><%= entries.get(i).getFloor() %></td>
 	    <td><%= entries.get(i).getRoom() %></td>
-	    <td><aui:a id="editPageButton" href="#" ><%= entries.get(i).getName() %></aui:a></td>
+	    <td><aui:a id="<%= myId %>" label="<%=entries.get(i).getName()%>" href="#" onClick="return false;" /></td>
 	    <td><%= entries.get(i).getHost() %></td>
 	    <td><%= entries.get(i).getRoom_number() %> days</td>
 	    <td><%= entries.get(i).getLeave_date()  %></td>
 	    <td><%= entries.get(i).getPlace() %></td>
 	    <td><%= entries.get(i).getShow() %></td>
-
 	  </tr>
+	  <aui:script position="inline" use="aui-base">
+		var editpageButton = A.one('#<portlet:namespace /><%=myId%>');
+		editpageButton.on('click',
+			function() {
+				
+				Liferay.Util.openWindow(
+					{
+						dialog: {
+							//cssClass: 'aui-popup-example',
+							destroyOnHide: true,
+							height: 700,
+							width: 700
+						},
+						dialogIframe: {
+							//bodyCssClass: 'custom-css-class'
+						},
+						title: 'Edit Page',
+						uri: '<%=editPageURL.toString()%>',
+						id: '<portlet:namespace/>dialog2',
+						
+					}
+				);		
+				
+			}
+		);
+	  </aui:script>
 	  <%
 			}
 		}else{

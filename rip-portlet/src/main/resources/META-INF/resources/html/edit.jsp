@@ -29,7 +29,7 @@
 		
 	});
 </aui:script>
-<portlet:actionURL name="addWritePage" var="getAddPage"></portlet:actionURL>
+<portlet:actionURL name="editWritePage" var="getAddPage"></portlet:actionURL>
 
 <aui:form action="<%= getAddPage %>">
 <table id="addForm" style="width: 90%; padding-left: 25px;">
@@ -38,14 +38,14 @@
 				<th>Show Enable</th>
 			</td>
 			<td style="padding: 19px;">
-				<aui:input inlineField="true" label="Enable" name="showOption"  type="radio" value="Enable" />
-		        <aui:input inlineField="true" label="Disable" name="showOption"  type="radio" value="Disable" />
+				<aui:input checked="<%= (request.getParameter("Show").equals("Enable")) ? true : false %>" inlineField="true" label="Enable" name="showOption"  type="radio" value="Enable" />
+		        <aui:input checked="<%= (request.getParameter("Show").equals("Disable")) ? true : false %>" inlineField="true" label="Disable" name="showOption"  type="radio" value="Disable" />
 			</td>
 			<td>
 				<th>Number</th>
 			</td>
 			<td style="padding: 19px;">
-				<aui:input label="" name="roomNumber"  type="number" value="1" />
+				<aui:input label="" name="roomNumber" value="<%= request.getParameter("Room_number") %>"  type="number" />
 			</td>
 	</tr>
 	<tr>
@@ -54,13 +54,48 @@
 			</td>
 			<td style="padding: 19px;">
 				<aui:select id="selectedFloor" label="" name="selectFloor">
-					  <option value="2">2nd Floor</option>
-					  <option value="3">3rd Floor</option>
-					  <option value="5">5th Floor</option>
-					  <option value="6">6th Floor</option>
-					  <option value="7">7th Floor</option>
-					  <option value="b1">B1</option>
-					  <option value="2b">2B</option>
+				
+					  <% if(request.getParameter("Floor").equals("2")){ %>
+					  	<option selected value="2">2nd Floor</option> 
+					  <% }else{ %>
+					    <option value="2">2nd Floor</option>
+					  <%} %>
+					  
+					  <% if(request.getParameter("Floor").equals("3")){ %>
+					  	<option selected value="3">3rd Floor</option>
+					  <% }else{ %>
+					  	<option value="3">3rd Floor</option>
+					  <%} %>					  
+
+					  <% if(request.getParameter("Floor").equals("5")){ %>
+					  	 <option selected value="5">5th Floor</option>
+					  <% }else{ %>
+					  	 <option value="5">5th Floor</option>
+					  <%} %>
+					  
+					  <% if(request.getParameter("Floor").equals("6")){ %>
+					  	 <option selected value="6">6th Floor</option>
+					  <% }else{ %>
+					  	 <option value="6">6th Floor</option>
+					  <%} %>
+					  
+					  <% if(request.getParameter("Floor").equals("7")){ %>
+					  	<option selected value="7">7th Floor</option>
+					  <% }else{ %>
+					  	<option value="7">7th Floor</option>
+					  <%} %>
+					  
+					  <% if(request.getParameter("Floor").equals("b1")){ %>
+					  	<option selected value="b1">B1</option>
+					  <% }else{ %>
+					  	<option value="b1">B1</option>
+					  <%} %>
+					  
+					  <% if(request.getParameter("Floor").equals("2b")){ %>
+					  	<option selected value="2b">2B</option>
+					  <% }else{ %>
+					  	<option value="2b">2B</option>
+					  <%} %>					  					  				  					  					  
 				</aui:select>
 			</td>
 			<td>
@@ -68,9 +103,45 @@
 			</td>
 			<td style="padding: 19px;">
 				<aui:select id="selectRoom" label="" name="selectRoom">
-					<option value='201'>Room 201</option>
-					<option value='202'>Room 202</option>
+						
+					  <% if(request.getParameter("Floor").equals("2")){ %>
+					  	<option value='201'>Room 201</option><option value='202'>Room 202</option>
+					  <% }%>
+					  
+					  <% if(request.getParameter("Floor").equals("3")){ %>
+					  	<option value='301'>Room 301</option><option value='302'>Room 302</option> 
+					  <% }%>
+					  
+					  <% if(request.getParameter("Floor").equals("5")){ %>
+					  	<option value='501'>Room 501</option><option value='502'>Room 502</option><option value='503'>Room 503</option> 
+					  <% }%>
+					  
+					  <% if(request.getParameter("Floor").equals("6")){ %>
+					  	<option value='601'>Room 601</option><option value='602'>Room 602</option><option value='603'>Room 603</option>
+					  <% }%>
+					  
+					  <% if(request.getParameter("Floor").equals("7")){ %>
+					  	<option value='701'>Room 701</option><option value='702'>Room 702</option><option value='703'>Room 703</option> 
+					  <% }%>
+					  
+					  <% if(request.getParameter("Floor").equals("b1")){ %>
+					  	<option value='b101'>Room B101</option><option value='b102'>Room B102</option><option value='b103'>Room B103</option>
+					  <% }%>
+					  
+					  <% if(request.getParameter("Floor").equals("2b")){ %>
+					  	<option value='b201'>Room B201</option><option value='b202'>Room B202</option><option value='b203'>Room B203</option>
+					  <% }%>
 				</aui:select>
+				<aui:script use="node">
+					var optionList = A.one('#<portlet:namespace/>selectRoom')._node.options;
+					for(var i = 0; i < optionList.length; i++){
+					    console.log(optionList[i].value);
+					    if(optionList[i].value == <%= request.getParameter("Room") %>){
+					    	console.log("check true: " + optionList[i].value + " " + <%= request.getParameter("Room") %>);
+					    	optionList[i].setAttribute('selected','true');
+					    }
+					}
+				</aui:script>
 			</td>
 	</tr>
 	<tr>
@@ -78,13 +149,13 @@
 			<th>Name</th>
 		</td>
 		<td style="padding: 19px;">
-			<aui:input label="" name="UserName" type="text" />
+			<aui:input value="<%= request.getParameter("Name") %>" label="" name="UserName" type="text" />
 		</td>
 		<td>
 			<th>Host</th>
 		</td>
 		<td style="padding: 19px;">
-			<aui:input label="" name="HostName" type="text" />
+			<aui:input label="" value="<%= request.getParameter("Host") %>" name="HostName" type="text" />
 		</td>
 	</tr>
 	<tr>
@@ -92,7 +163,7 @@
 			<th>Leave Date</th>
 		</td>
 		<td style="padding: 19px;">
-			<aui:input readonly="true" id = "datePic" label="" name="leaveDate" type="text" style="float: left;width: 133px;margin-right: 18px;color: black;cursor: text;" />
+			<aui:input readonly="true" value="<%= request.getParameter("Leave_date") %>" id = "datePic" label="" name="leaveDate" type="text" style="float: left;width: 133px;margin-right: 18px;color: black;cursor: text;" />
 			<i id="datePic" style="cursor:pointer" class="icon-calendar icon-white"></i>
 		</td>
 	</tr>
@@ -101,7 +172,7 @@
 			<th>Place</th>
 		</td>
 		<td style="padding: 19px;">
-			<aui:input label="" name="placeUser" type="text" />
+			<aui:input label="" value="<%= request.getParameter("Place") %>" name="placeUser" type="text" />
 		</td>
 	</tr>
 </table>
@@ -166,4 +237,8 @@ YUI().use(
 A.one('#<portlet:namespace/>cancelButton').on('click', function(event) {
     Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
 });
+
 </aui:script>
+
+
+
