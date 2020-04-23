@@ -68,7 +68,23 @@
 						id: '<portlet:namespace/>dialog2',
 						
 					}
-				);		
+				);
+				
+			Liferay.provide(
+		     window,
+		     'closePopup',
+		     function(dialogId) {
+		             var dialog = Liferay.Util.getWindow(dialogId);
+		
+		
+		          Liferay.fire('closeWindow', {
+		                    id:'<portlet:namespace/>dialog2'
+		                           });
+		                           
+
+                  		window.location.reload(); 
+		                           
+		                 },['aui-base','liferay-util-window'] );		
 				
 			}
 		);
@@ -118,7 +134,12 @@ popupButton.on('click',
           Liferay.fire('closeWindow', {
                     id:'<portlet:namespace/>dialog'
                            });
+                           
+                  console.log("close it") 
+                  window.location.reload();         
                  },['aui-base','liferay-util-window'] );
+                        
+	
 	}
 );
 

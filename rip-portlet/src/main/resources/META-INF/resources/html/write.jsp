@@ -6,11 +6,11 @@
 		console.log(selectFloor.val() == '2');
 		if(selectFloor.val() == '2'){
 			selectRoom.empty();
-			selectRoom.append("<option value='201'>Room 201</option><option value='202'>Room 202</option>");
+			selectRoom.append("<option"src/main/resources/META-INF/resources/html/view.jsp" value='201'>Room 201</option><option value='202'>Room 202</option>");
 		}else if(selectFloor.val() == '3'){
 			selectRoom.empty();
 			selectRoom.append("<option value='301'>Room 301</option><option value='302'>Room 302</option>");
-		}else if(selectFloor.val() == '5'){
+		}else if(selectFloor.val() == '5'){"src/main/resources/META-INF/resources/html/view.jsp"
 			selectRoom.empty();
 			selectRoom.append("<option value='501'>Room 501</option><option value='502'>Room 502</option><option value='503'>Room 503</option>");
 		}else if(selectFloor.val() == '6'){

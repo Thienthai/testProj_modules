@@ -1,4 +1,13 @@
 <%@ include file="../init.jsp" %>
+
+<%
+	String roomNumber = request.getParameter("Room_number");
+	String UserName = request.getParameter("Name");
+	String HostName = request.getParameter("Host");
+	String leaveDate = request.getParameter("Leave_date");
+	String placeUser = request.getParameter("Place");
+%>
+
 <aui:script use="node, event">
 	var selectFloor = A.one('#<portlet:namespace/>selectedFloor');
 	selectFloor.on('change',() => {
@@ -29,12 +38,21 @@
 		
 	});
 </aui:script>
-<portlet:actionURL name="editWritePage" var="getAddPage"></portlet:actionURL>
+<portlet:actionURL name="editWritePage" var="getAddPage">
+</portlet:actionURL>
 <portlet:actionURL name="deleteList" var="deleteurl">
+	<portlet:param name="mvcPath" value="/html/view.jsp"/>
 	<portlet:param name="myId" value="<%= request.getParameter("myId") %>"/>
 </portlet:actionURL>
 
-<aui:form action="<%= getAddPage %>">
+<portlet:actionURL name="testingLink" var="testingURL">
+	<portlet:param name="mvcPath" value="/html/view.jsp"/>
+</portlet:actionURL>
+
+	<portlet:renderURL var="editPageURL">
+	</portlet:renderURL>
+
+<aui:form name="myForm" action="<%= getAddPage %>" >
 <table id="addForm" style="width: 90%; padding-left: 25px;">
 	<tr>
 			<td>
@@ -49,7 +67,7 @@
 				<th>Number</th>
 			</td>
 			<td style="padding: 19px;">
-				<aui:input label="" name="roomNumber" value="<%= request.getParameter("Room_number") %>"  type="number" />
+				<aui:input label="" name="roomNumber" value="<%= roomNumber %>"  type="number" />
 			</td>
 	</tr>
 	<tr>
@@ -153,13 +171,13 @@
 			<th>Name</th>
 		</td>
 		<td style="padding: 19px;">
-			<aui:input value="<%= request.getParameter("Name") %>" label="" name="UserName" type="text" />
+			<aui:input value="<%= UserName  %>" label="" name="UserName" type="text" />
 		</td>
 		<td>
 			<th>Host</th>
 		</td>
 		<td style="padding: 19px;">
-			<aui:input label="" value="<%= request.getParameter("Host") %>" name="HostName" type="text" />
+			<aui:input label="" value="<%= HostName %>" name="HostName" type="text" />
 		</td>
 	</tr>
 	<tr>
@@ -167,7 +185,7 @@
 			<th>Leave Date</th>
 		</td>
 		<td style="padding: 19px;">
-			<aui:input readonly="true" value="<%= request.getParameter("Leave_date") %>" id = "datePic" label="" name="leaveDate" type="text" style="float: left;width: 133px;margin-right: 18px;color: black;cursor: text;" />
+			<aui:input readonly="true" value="<%= leaveDate %>" id = "datePic" label="" name="leaveDate" type="text" style="float: left;width: 133px;margin-right: 18px;color: black;cursor: text;" />
 			<i id="datePic" style="cursor:pointer" class="icon-calendar icon-white"></i>
 		</td>
 	</tr>
@@ -176,14 +194,21 @@
 			<th>Place</th>
 		</td>
 		<td style="padding: 19px;">
-			<aui:input label="" value="<%= request.getParameter("Place") %>" name="placeUser" type="text" />
+			<aui:input label="" value="<%= placeUser %>" name="placeUser" type="text" />
 		</td>
 	</tr>
 </table>
 <aui:button type="Submit" style="background-color: #315cbc;color: white;margin-left: 27px;margin-top: 12px;margin-bottom: 10px;" id="submitButton" value="Update" />
 <aui:button onClick="<%= deleteurl.toString() %>" style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;background-color: #ea6c6c;color: white;" id="deleteButton" value="Delete"/>
 <aui:button style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;" id="cancelButton" value="Cancel"/>
-
+<aui:button onCLick="testFunc()" style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;" id="testButton" value="Test"/>
+<script>
+	function testFunc(){
+		 location.replace("<%= testingURL %>");
+		 Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
+	}
+	
+</script>
 </aui:form>
 
 <aui:script use="node, event">
@@ -243,6 +268,7 @@ YUI().use(
 A.one('#<portlet:namespace/>cancelButton').on('click', function(event) {
     Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
 });
+
 
 </aui:script>
 

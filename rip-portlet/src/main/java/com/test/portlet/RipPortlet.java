@@ -61,6 +61,11 @@ public class RipPortlet extends MVCPortlet {
 		}
 	}
 	
+	public void testingLink(ActionRequest actionRequest,ActionResponse actionResponse){
+		
+		System.out.println("run something");
+	}
+	
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
@@ -150,6 +155,7 @@ public class RipPortlet extends MVCPortlet {
 		
 		try {
 			_ripLocalService.addripReservation(rip);
+			actionResponse.sendRedirect("/html/edit.jsp");
 		} catch (Exception e) {
 			e.printStackTrace();
 			SessionErrors.add(actionRequest, "error-key");
