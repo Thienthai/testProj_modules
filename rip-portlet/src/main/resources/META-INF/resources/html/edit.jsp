@@ -1,4 +1,5 @@
 <%@ include file="../init.jsp" %>
+<%@ include file="view.jsp" %>
 
 <%
 	String roomNumber = request.getParameter("Room_number");
@@ -6,13 +7,13 @@
 	String HostName = request.getParameter("Host");
 	String leaveDate = request.getParameter("Leave_date");
 	String placeUser = request.getParameter("Place");
+	
 %>
 
 <aui:script use="node, event">
 	var selectFloor = A.one('#<portlet:namespace/>selectedFloor');
 	selectFloor.on('change',() => {
 		var selectRoom = A.one('#<portlet:namespace/>selectRoom');
-		console.log(selectFloor.val() == '2');
 		if(selectFloor.val() == '2'){
 			selectRoom.empty();
 			selectRoom.append("<option value='201'>Room 201</option><option value='202'>Room 202</option>");
@@ -166,9 +167,7 @@
 				<aui:script use="node">
 					var optionList = A.one('#<portlet:namespace/>selectRoom')._node.options;
 					for(var i = 0; i < optionList.length; i++){
-					    console.log(optionList[i].value);
 					    if(optionList[i].value == <%= request.getParameter("Room") %>){
-					    	console.log("check true: " + optionList[i].value + " " + <%= request.getParameter("Room") %>);
 					    	optionList[i].setAttribute('selected','true');
 					    }
 					}
@@ -210,14 +209,7 @@
 <aui:button onClick="callServeResource()" type="Submit" style="background-color: #315cbc;color: white;margin-left: 27px;margin-top: 12px;margin-bottom: 10px;" id="submitButton" value="Update" />
 <aui:button onClick="<%= deleteurl.toString() %>" style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;background-color: #ea6c6c;color: white;" id="deleteButton" value="Delete"/>
 <aui:button style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;" id="cancelButton" value="Cancel"/>
-<aui:button onCLick="testFunc()" style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;" id="testButton" value="Test"/>
-<script>
-	function testFunc(){
-		 location.replace("<%= testingURL %>");
-		 Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
-	}
-	
-</script>
+
 </aui:form>
 
 <aui:script use="node, event">
@@ -289,6 +281,7 @@ window.callServeResource = function() {
                },
                on: {
                    success: function() {
+                   	 alert(A.one('#<portlet:namespace/>testIn'));
                      Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
                    }
               }

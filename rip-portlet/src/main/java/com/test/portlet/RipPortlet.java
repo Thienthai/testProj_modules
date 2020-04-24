@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -162,6 +164,32 @@ public class RipPortlet extends MVCPortlet {
 				e.printStackTrace();
 				SessionErrors.add(resourceRequest, "error-key");
 				SessionMessages.add(resourceRequest, PortalUtil.getPortletId(resourceRequest) + SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE);
+			}
+			
+		}
+		
+		if(mode.equals("Render")) {
+			
+			int getCount = _ripLocalService.getripReservationsCount();
+			List<ripReservation> rip = _ripLocalService.getripReservations(0,getCount);
+			resourceResponse.setContentType("application/json");
+			String jsonString = "{"
+					+ "'name': " + "'" +rip.get(0).getShow()+ "'," 
+					+ "'roomNumber': " + "'" +rip.get(0).getRoom_number()+ "',"
+					+ "'selectFloor': " + "'" +rip.get(0).getFloor()+ "',"
+					+ "'selectRoom': " + "'" +rip.get(0).getRoom()+ "',"
+					+ "'UserName': " + "'" +rip.get(0).getName()+ "',"
+					+ "'HostName': " + "'" +rip.get(0).getHost()+ "',"
+					+ "'leaveDate': " + "'" +rip.get(0).getLeave_date()+ "',"
+					+ "'placeUser': " + "'" +rip.get(0).getPlace()+ "'"
+					+ "} ";
+			System.out.println(jsonString);
+			try {
+				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(jsonString);
+				resourceResponse.getWriter().write(jsonObject.toString());
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 		}
