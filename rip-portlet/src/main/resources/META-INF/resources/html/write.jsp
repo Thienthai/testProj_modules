@@ -6,7 +6,7 @@
 		console.log(selectFloor.val() == '2');
 		if(selectFloor.val() == '2'){
 			selectRoom.empty();
-			selectRoom.append("<option"src/main/resources/META-INF/resources/html/view.jsp" value='201'>Room 201</option><option value='202'>Room 202</option>");
+			selectRoom.append("<option value='201'>Room 201</option><option value='202'>Room 202</option>");
 		}else if(selectFloor.val() == '3'){
 			selectRoom.empty();
 			selectRoom.append("<option value='301'>Room 301</option><option value='302'>Room 302</option>");
@@ -29,9 +29,10 @@
 		
 	});
 </aui:script>
-<portlet:actionURL name="addWritePage" var="getAddPage"></portlet:actionURL>
 
-<aui:form action="<%= getAddPage %>">
+<portlet:resourceURL var="resourceURL" /> 
+
+<aui:form id="fm" name="fm" >
 <table id="addForm" style="width: 90%; padding-left: 25px;">
 	<tr>
 			<td>
@@ -106,7 +107,7 @@
 		</td>
 	</tr>
 </table>
-<aui:button type="Submit" style="background-color: #315cbc;color: white;margin-left: 27px;margin-top: 12px;margin-bottom: 10px;" id="submitButton" value="Submit" />
+<aui:button onClick="callServeResource()" type="Submit" style="background-color: #315cbc;color: white;margin-left: 27px;margin-top: 12px;margin-bottom: 10px;" id="submitButton" value="Submit" />
 <aui:button style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;" id="cancelButton" value="Cancel"/>
 </aui:form>
 
@@ -167,6 +168,25 @@ YUI().use(
 A.one('#<portlet:namespace/>cancelButton').on('click', function(event) {
     Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
 });
+
+window.callServeResource = function() {
+	var form = A.one('#<portlet:namespace/>fm')._node;
+    AUI().use('aui-io-request', (A) => {
+        A.io.request('<%=resourceURL.toString()%>', {
+               method: 'post',
+               data: {
+               	   <portlet:namespace />mode: 'write',
+            	   <portlet:namespace />fm: $(form).serialize()
+               },
+               on: {
+                   success: function() {
+                     Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
+                   }
+              }
+        });
+     });
+}
+
 </aui:script>
 
 
