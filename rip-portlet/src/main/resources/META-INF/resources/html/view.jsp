@@ -4,8 +4,6 @@
 	<portlet:param name="mvcPath" value="/html/write.jsp"/>
 </portlet:renderURL>
 
-<aui:input style="float: left;width: 101px;margin-right: 12px;" label="" name="testinput"  type="number" value="" />
-
 <portlet:resourceURL var="resourceURL" />
 
 <div>
@@ -146,27 +144,28 @@ popupButton.on('click',
                            });
                            
                   console.log("close it") 
+                  window.location.reload();
                   // call ajax instead
                   
-                      AUI().use('aui-io-request', (A) => {   // call ajax block
-					        A.io.request('<%=resourceURL.toString()%>', {
-					               method: 'post',
-					               data: {
-					               	   <portlet:namespace />mode: 'Render',
-					               },
-					               on: {
-					                   success: function(data) {
-					                     	var dat = JSON.parse(data.details[1].response);
-					                     	console.log(data);
-					                     	var body = document.getElementById("customers").childNodes[1]
-					                     	body.firstElementChild.insertAdjacentHTML('afterend','<td>' + dat.selectFloor + '</td><td>' + dat.selectRoom + '</td><td><aui:a id=' + <%= myId %> + ' label="' + dat.UserName + '" href="#" onClick="return false;" /></td><td>' + dat.HostName + '</td><td>' + dat.roomNumber + ' days</td><td>' + dat.leaveDate + '</td><td>' + dat.placeUser + '</td><td>' + dat.name + '</td>');
-					                   },
-					                   failure: function() {
-					                   		alert("fail");
-					                   }
-					              }
-					        });
-					    }); // end ajax block
+//                      AUI().use('aui-io-request', (A) => {   // call ajax block
+//					        A.io.request('<%=resourceURL.toString()%>', {
+	//				               method: 'post',
+		//			               data: {
+			//		               	   <portlet:namespace />mode: 'Render',
+				//	               },
+					//               on: {
+					  //                 success: function(data) {
+					    //                 	var dat = JSON.parse(data.details[1].response);
+					      //               	console.log(data);
+					      //               	var body = document.getElementById("customers").childNodes[1]
+					      //               	body.firstElementChild.insertAdjacentHTML('afterend','<td>' + dat.selectFloor + '</td><td>' + dat.selectRoom + '</td><td><aui:a id=' + <%= myId %> + ' label="' + dat.UserName + '" href="#" onClick="return false;" /></td><td>' + dat.HostName + '</td><td>' + dat.roomNumber + ' days</td><td>' + dat.leaveDate + '</td><td>' + dat.placeUser + '</td><td>' + dat.name + '</td>');
+					       //            },
+					        //           failure: function() {
+					        //           		alert("fail");
+					       //            }
+					      //        }
+					     //   });
+					  //  }); // end ajax block
                          
                  },['aui-base','liferay-util-window'] );
                  

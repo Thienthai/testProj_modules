@@ -1,5 +1,4 @@
 <%@ include file="../init.jsp" %>
-<%@ include file="view.jsp" %>
 
 <%
 	String roomNumber = request.getParameter("Room_number");
