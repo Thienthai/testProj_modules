@@ -24,6 +24,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -65,6 +66,14 @@ public class RipPortlet extends MVCPortlet {
 		}
 	}
 	
+	@Override
+	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
+			throws IOException, PortletException {
+		// TODO Auto-generated method stub
+		System.out.println("viewing");
+		super.doView(renderRequest, renderResponse);
+	}
+	
 	public void testingLink(ActionRequest actionRequest,ActionResponse actionResponse){
 		
 		System.out.println("run something");
@@ -74,9 +83,9 @@ public class RipPortlet extends MVCPortlet {
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		
-		System.out.println(ParamUtil.getString(renderRequest, "floor"));
-		
 		List<ripReservation> rip = null;
+		
+		System.out.println("count size of elements: " +  _ripLocalService.getripReservationsCount());
 		
 		rip = _ripLocalService.getripReservations(0, _ripLocalService.getripReservationsCount());
 		
@@ -90,6 +99,22 @@ public class RipPortlet extends MVCPortlet {
 		_log.info("This is serve resource method....");
 		
 		String mode = ParamUtil.getString(resourceRequest, "mode");
+		
+		if(mode.equals("delete")) {
+			String string = ParamUtil.getString(resourceRequest, "fm");
+			String[] parts = string.split("&");
+			String myId = parts[1].substring(parts[1].indexOf("=") + 1);
+			
+			try {
+				_ripLocalService.deleteripReservation(Long.parseLong(myId));
+			} catch (NumberFormatException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (PortalException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
+		}
 		
 		if (mode.equals("edit")) {
 			
@@ -170,27 +195,17 @@ public class RipPortlet extends MVCPortlet {
 		
 		if(mode.equals("Render")) {
 			
-			int getCount = _ripLocalService.getripReservationsCount();
-			List<ripReservation> rip = _ripLocalService.getripReservations(0,getCount);
-			resourceResponse.setContentType("application/json");
-			String jsonString = "{"
-					+ "'name': " + "'" +rip.get(0).getShow()+ "'," 
-					+ "'roomNumber': " + "'" +rip.get(0).getRoom_number()+ "',"
-					+ "'selectFloor': " + "'" +rip.get(0).getFloor()+ "',"
-					+ "'selectRoom': " + "'" +rip.get(0).getRoom()+ "',"
-					+ "'UserName': " + "'" +rip.get(0).getName()+ "',"
-					+ "'HostName': " + "'" +rip.get(0).getHost()+ "',"
-					+ "'leaveDate': " + "'" +rip.get(0).getLeave_date()+ "',"
-					+ "'placeUser': " + "'" +rip.get(0).getPlace()+ "'"
-					+ "} ";
-			System.out.println(jsonString);
-			try {
-				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(jsonString);
-				resourceResponse.getWriter().write(jsonObject.toString());
-			}catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			List<ripReservation> rip = null;
+			
+			System.out.println("count size of elements: " +  _ripLocalService.getripReservationsCount());
+			
+			rip = _ripLocalService.getripReservations(0, _ripLocalService.getripReservationsCount());
+			
+			resourceRequest.setAttribute("entries", rip);
+
+			PortletRequestDispatcher dispatcher = resourceRequest.getPortletSession().getPortletContext().getRequestDispatcher("/html/table.jsp");
+			resourceRequest.getPortletSession().getPortletContext().setAttribute("entries", rip);
+			dispatcher.include(resourceRequest, resourceResponse);
 			
 		}
 		

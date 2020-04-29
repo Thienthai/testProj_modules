@@ -51,7 +51,7 @@
 
 
 
-<portlet:resourceURL var="resourceURL" /> 
+<portlet:resourceURL var="resourceURL" />  
 
 
 <script type="text/javascript">
@@ -206,7 +206,7 @@
 	</tr>
 </table>
 <aui:button onClick="callServeResource()" type="Submit" style="background-color: #315cbc;color: white;margin-left: 27px;margin-top: 12px;margin-bottom: 10px;" id="submitButton" value="Update" />
-<aui:button onClick="<%= deleteurl.toString() %>" style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;background-color: #ea6c6c;color: white;" id="deleteButton" value="Delete"/>
+<aui:button onClick="deleteEntry()" style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;background-color: #ea6c6c;color: white;" id="deleteButton" value="Delete"/>
 <aui:button style="margin-left: 12px;margin-top: 12px;margin-bottom: 10px;" id="cancelButton" value="Cancel"/>
 
 </aui:form>
@@ -280,7 +280,24 @@ window.callServeResource = function() {
                },
                on: {
                    success: function() {
-                   	 alert(A.one('#<portlet:namespace/>testIn'));
+                     Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
+                   }
+              }
+        });
+     });
+}
+
+window.deleteEntry = function(){
+	var form = A.one('#<portlet:namespace/>fm')._node;
+    AUI().use('aui-io-request', (A) => {
+        A.io.request('<%=resourceURL.toString()%>', {
+               method: 'post',
+               data: {
+               	   <portlet:namespace />mode: 'delete',
+            	   <portlet:namespace />fm: $(form).serialize()
+               },
+               on: {
+                   success: function() {
                      Liferay.Util.getOpener().closePopup('<portlet:namespace/>dialog');
                    }
               }

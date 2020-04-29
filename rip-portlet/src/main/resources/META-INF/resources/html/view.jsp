@@ -4,10 +4,86 @@
 	<portlet:param name="mvcPath" value="/html/write.jsp"/>
 </portlet:renderURL>
 
-<portlet:resourceURL var="resourceURL" />
+<portlet:resourceURL var="resourceURL">
+</portlet:resourceURL>
+
+<%
+	System.out.println("test Render");
+%>
+
+<aui:script position="inline" use="aui-base">
+
+	window.forwardFunc = function(Floor,Room,Name,Host,Room_Number,Date,Place,Show,myId,editPageURL){
+		//alert(Floor +" "+Room+" "+Name+" "+ Host+" "+Room_Number+" "+Date+" "+Place+" "+Show+" "+myId+" "+editPageURL)
+		var editpageButton = A.one('#<portlet:namespace />myId');
+					
+				Liferay.Util.openWindow(
+					{
+						dialog: {
+							//cssClass: 'aui-popup-example',
+							destroyOnHide: true,
+							height: 700,
+							width: 700
+						},
+						dialogIframe: {
+							//bodyCssClass: 'custom-css-class'
+						},
+						title: 'Edit Page',
+						uri: editPageURL,
+						id: '<portlet:namespace/>dialog2',
+						
+					}
+					
+					
+					
+				);
+				
+	Liferay.provide(
+     window,
+     'closePopup',
+     function(dialogId) {
+             var dialog = Liferay.Util.getWindow(dialogId);
+
+
+          Liferay.fire('closeWindow', {
+                    id:'<portlet:namespace/>dialog2'
+                           });
+                           
+                  console.log("close it") 
+                  // call ajax instead
+                  
+                      AUI().use('aui-io-request', (A) => {   // call ajax block
+					        A.io.request('<%=renderResponse.encodeURL(resourceURL.toString())%>', {
+					               method: 'post',
+					               dataType: 'html',
+					               data: {
+					               	   <portlet:namespace />mode: 'Render',
+					               },
+					               on: {
+					                   success: function(response) {
+					                   		var context = response.details[1].responseText;
+					                   		console.log(response);
+					                   		document.getElementById('customers').children[0].remove();
+					                   		document.getElementById('customers').innerHTML = context;
+					                   },
+					                   failure: function() {
+
+					                   }
+					              }
+					        });
+					    }); // end ajax block
+                         
+                 },['aui-base','liferay-util-window'] );		
+				
+	}
+			
+</aui:script>
 
 <div>
 	<aui:button id="popupButton" value="Add" />
+	  <script>
+	  	console.log("Start create table");
+	  </script>
 	<table id="customers" style="border-collapse: collapse;">
 	  <tr>
 	    <th>Floor</th>
@@ -19,10 +95,10 @@
 	    <th>Place</th>
 	    <th>Show</th>
 	  </tr>
-	  <div id="infoTable">
   <%
-	  List<ripReservation> entries = (List<ripReservation>) renderRequest.getAttribute("entries");
-		if(entries != null){
+	  List<ripReservation> entries = (List<ripReservation>) request.getAttribute("entries");
+		if(entries.size() != 0){
+			System.out.println("come here");
 			int number = entries.size();
 			for(int i = 0;i<number;i++)
 			{
@@ -44,7 +120,7 @@
 	  <tr>
 	    <td><%= entries.get(i).getFloor() %></td>
 	    <td><%= entries.get(i).getRoom() %></td>
-	    <td><aui:a id="<%= myId %>" label="<%=entries.get(i).getName()%>" href="#" onClick="return false;" /></td>
+	    <td><aui:a id="<%= myId %>" label="<%=entries.get(i).getName()%>" href="javascript:void(0)" onClick="forwardFunc('${entries.get(i).getFloor()}','${entries.get(i).getRoom()}','${entries.get(i).getName()}','${entries.get(i).getHost()}','${entries.get(i).getRoom_number()}','${entries.get(i).getLeave_date()}','${entries.get(i).getPlace()}','${entries.get(i).getShow()}','${entries.get(i).getId()}','${editPageURL}')" /></td>
 	    <td><%= entries.get(i).getHost() %></td>
 	    <td><%= entries.get(i).getRoom_number() %> days</td>
 	    <td><%= entries.get(i).getLeave_date()  %></td>
@@ -52,60 +128,24 @@
 	    <td><%= entries.get(i).getShow() %></td>
 	  </tr>
 	  <aui:script position="inline" use="aui-base">
-		var editpageButton = A.one('#<portlet:namespace /><%=myId%>');
+	  	console.log("table run");
+		var editpageButton = A.one('a');
 		editpageButton.on('click',
 			function() {
-				
-				Liferay.Util.openWindow(
-					{
-						dialog: {
-							//cssClass: 'aui-popup-example',
-							destroyOnHide: true,
-							height: 700,
-							width: 700
-						},
-						dialogIframe: {
-							//bodyCssClass: 'custom-css-class'
-						},
-						title: 'Edit Page',
-						uri: '<%=editPageURL.toString()%>',
-						id: '<portlet:namespace/>dialog2',
-						
-					}
-					
-					
-					
-				);
-				
-			Liferay.provide(
-		     window,
-		     'closePopup',
-		     function(dialogId) {
-		             var dialog = Liferay.Util.getWindow(dialogId);
-		
-		
-		          Liferay.fire('closeWindow', {
-		                    id:'<portlet:namespace/>dialog2'
-		                           });
-		                           
-
-                  		window.location.reload(); 
-		                           
-		                 },['aui-base','liferay-util-window'] );		
-				
+				forwardFunc('${entries.get(i).getFloor()}','${entries.get(i).getRoom()}','${entries.get(i).getName()}','${entries.get(i).getHost()}','${entries.get(i).getRoom_number()}','${entries.get(i).getLeave_date()}','${entries.get(i).getPlace()}','${entries.get(i).getShow()}','${entries.get(i).getId()}','${editPageURL}')				
 			}
 		);
 	  </aui:script>
+	  </table>
 	  <%
 			}
 		}else{
 			%>
-			<span id="noResult">No Result</span>
+			</table>
+			<td><span id="noResult">No Result</span></td>
 			<%
 		}
 	  %>
-	  </div>
-	</table>
 	<hr>
 </div>
 
@@ -144,35 +184,36 @@ popupButton.on('click',
                            });
                            
                   console.log("close it") 
-                  window.location.reload();
+                  //window.location.reload();
                   // call ajax instead
                   
-//                      AUI().use('aui-io-request', (A) => {   // call ajax block
-//					        A.io.request('<%=resourceURL.toString()%>', {
-	//				               method: 'post',
-		//			               data: {
-			//		               	   <portlet:namespace />mode: 'Render',
-				//	               },
-					//               on: {
-					  //                 success: function(data) {
-					    //                 	var dat = JSON.parse(data.details[1].response);
-					      //               	console.log(data);
-					      //               	var body = document.getElementById("customers").childNodes[1]
-					      //               	body.firstElementChild.insertAdjacentHTML('afterend','<td>' + dat.selectFloor + '</td><td>' + dat.selectRoom + '</td><td><aui:a id=' + <%= myId %> + ' label="' + dat.UserName + '" href="#" onClick="return false;" /></td><td>' + dat.HostName + '</td><td>' + dat.roomNumber + ' days</td><td>' + dat.leaveDate + '</td><td>' + dat.placeUser + '</td><td>' + dat.name + '</td>');
-					       //            },
-					        //           failure: function() {
-					        //           		alert("fail");
-					       //            }
-					      //        }
-					     //   });
-					  //  }); // end ajax block
+                      AUI().use('aui-io-request', (A) => {   // call ajax block
+					        A.io.request('<%=renderResponse.encodeURL(resourceURL.toString())%>', {
+					               method: 'post',
+					               dataType: 'html',
+					               data: {
+					               	   <portlet:namespace />mode: 'Render',
+					               },
+					               on: {
+					                   success: function(response) {
+					                   		var context = response.details[1].responseText;
+					                   		console.log(response);
+					                   		document.getElementById('customers').children[0].remove();
+					                   		document.getElementById('customers').innerHTML = context;
+					                   },
+					                   failure: function() {
+
+					                   }
+					              }
+					        });
+					    }); // end ajax block
                          
                  },['aui-base','liferay-util-window'] );
-                 
-
-                        
-	
 	}
 );
 
 </aui:script>
+                 
+
+                        
+	
