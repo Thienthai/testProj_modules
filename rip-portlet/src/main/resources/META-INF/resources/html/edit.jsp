@@ -256,7 +256,6 @@ YUI().use(
             
             console.log(day + "/" + month + "/" + year);
             var dateInput = A.one('#<portlet:namespace/>datePic');
-            console.log(dateInput.val());
             dateInput.set('value', day + "/" + month + "/" + year);
           }
         }

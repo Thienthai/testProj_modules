@@ -11,7 +11,7 @@
 	  </tr>
 <%
 	  List<ripReservation> entries = (List<ripReservation>) resourceRequest.getAttribute("entries");
-		if(entries != null){
+		if(entries.size() != 0){
 			int number = entries.size();
 			for(int i = 0;i<number;i++)
 			{
@@ -39,23 +39,16 @@
 	    <td><%= entries.get(i).getPlace() %></td>
 	    <td><%= entries.get(i).getShow() %></td>
 	  </tr>
-	  <aui:script position="inline" use="aui-base">
-	  	console.log("table run");
-		var editpageButton = A.one('#<portlet:namespace /><%=myId%>');
-		editpageButton.on('click',
-			function() {
-				alert("click");
-				forwardFunc('${entries.get(i).getFloor()}','${entries.get(i).getRoom()}','${entries.get(i).getName()}','${entries.get(i).getHost()}','${entries.get(i).getRoom_number()}','${entries.get(i).getLeave_date()}','${entries.get(i).getPlace()}','${entries.get(i).getShow()}','${entries.get(i).getId()}','${editPageURL}')				
-			}
-		);
-	  </aui:script>
-	  </table>
+
 <%
 			}
+%>	
+			</table>
+<%	
 		}else{
 %>
-		</table>
-		<td><span id="noResult">No Result</span></td>
+			</table>
+			<span id="noResult">No Result</span>
 <%
 		}
 %>

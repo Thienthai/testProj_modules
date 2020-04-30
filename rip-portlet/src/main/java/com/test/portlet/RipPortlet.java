@@ -4,6 +4,7 @@ import com.test.constants.RipPortletKeys;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
@@ -12,7 +13,9 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -29,6 +32,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -70,9 +74,9 @@ public class RipPortlet extends MVCPortlet {
 	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		// TODO Auto-generated method stub
-		System.out.println("viewing");
 		super.doView(renderRequest, renderResponse);
 	}
+
 	
 	public void testingLink(ActionRequest actionRequest,ActionResponse actionResponse){
 		
@@ -83,13 +87,38 @@ public class RipPortlet extends MVCPortlet {
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		
-		List<ripReservation> rip = null;
+		PortalUtil pt = new PortalUtil();
+		HttpServletRequest httpreq = PortalUtil.getHttpServletRequest(renderRequest);
 		
-		System.out.println("count size of elements: " +  _ripLocalService.getripReservationsCount());
+		String userType = "noUserType";
+
+		List<Role> user = RoleLocalServiceUtil.getUserRoles(pt.getUserId(httpreq));
+		
+		List<Integer> roleList = new ArrayList<Integer>();
+		for (Role temp : user) {
+			roleList.add((int) temp.getRoleId());
+		}
+		
+		if(roleList.contains(20107)){
+			userType = "Admin";
+		}else if(roleList.contains(20112)){
+			userType = "User";
+		}else{
+			userType = "Guest";
+		}
+		
+		if(!userType.equals("Admin") && !userType.equals("User")) {
+		
+			SessionErrors.add(renderRequest, "error");
+		}
+		
+		List<ripReservation> rip = null;
 		
 		rip = _ripLocalService.getripReservations(0, _ripLocalService.getripReservationsCount());
 		
 		renderRequest.setAttribute("entries", rip);
+		
+		renderRequest.setAttribute("userType", userType);
 		
 		super.render(renderRequest, renderResponse);
 	}
@@ -153,14 +182,7 @@ public class RipPortlet extends MVCPortlet {
 		if(mode.equals("write")) {
 			
 			String string = ParamUtil.getString(resourceRequest, "fm");
-			System.out.println(string);
 			String[] parts = string.split("&");
-
-			for(int i = 0; i < parts.length;i++) {
-				
-				System.out.println(parts[i] + " " + i);
-				
-			}
 			
 			String showOption = parts[1].substring(parts[1].indexOf("=") + 1);
 			String roomNumber = parts[2].substring(parts[2].indexOf("=") + 1);
@@ -197,14 +219,13 @@ public class RipPortlet extends MVCPortlet {
 			
 			List<ripReservation> rip = null;
 			
-			System.out.println("count size of elements: " +  _ripLocalService.getripReservationsCount());
-			
 			rip = _ripLocalService.getripReservations(0, _ripLocalService.getripReservationsCount());
 			
 			resourceRequest.setAttribute("entries", rip);
 
 			PortletRequestDispatcher dispatcher = resourceRequest.getPortletSession().getPortletContext().getRequestDispatcher("/html/table.jsp");
 			resourceRequest.getPortletSession().getPortletContext().setAttribute("entries", rip);
+			resourceRequest.getPortletSession().getPortletContext().setAttribute("test", rip);
 			dispatcher.include(resourceRequest, resourceResponse);
 			
 		}

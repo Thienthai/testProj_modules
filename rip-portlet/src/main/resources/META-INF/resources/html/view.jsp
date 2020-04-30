@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@ include file="../init.jsp" %>
 
 <portlet:renderURL var="secondJspURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
@@ -7,9 +8,7 @@
 <portlet:resourceURL var="resourceURL">
 </portlet:resourceURL>
 
-<%
-	System.out.println("test Render");
-%>
+<liferay-ui:error key="error" message="You not have permission to view this portlet!!" />
 
 <aui:script position="inline" use="aui-base">
 
@@ -78,9 +77,18 @@
 	}
 			
 </aui:script>
+<%-- 	
+		Permission Checking start 
+--%>
+<% 
+		String userType = (String) renderRequest.getAttribute("userType");
+
+		if(!userType.equals("Guest")) {
+			
+%>
 
 <div>
-	<aui:button id="popupButton" value="Add" />
+	<aui:button style="float:right" id="popupButton" value="Add" />
 	  <script>
 	  	console.log("Start create table");
 	  </script>
@@ -95,15 +103,14 @@
 	    <th>Place</th>
 	    <th>Show</th>
 	  </tr>
-  <%
+<%
 	  List<ripReservation> entries = (List<ripReservation>) request.getAttribute("entries");
 		if(entries.size() != 0){
-			System.out.println("come here");
 			int number = entries.size();
 			for(int i = 0;i<number;i++)
 			{
 				String myId = Long.toString(entries.get(i).getId());
-	  %>
+%>
 	<portlet:renderURL var="editPageURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
 		<portlet:param name="mvcPath" value="/html/edit.jsp"/>
 		<portlet:param name="myId" value="<%= Long.toString(entries.get(i).getId()) %>"/>
@@ -136,18 +143,24 @@
 			}
 		);
 	  </aui:script>
-	  </table>
-	  <%
+<%
 			}
+%>	
+		</table>
+<%	
 		}else{
-			%>
+%>
 			</table>
-			<td><span id="noResult">No Result</span></td>
-			<%
+			<span id="noResult">No Result</span>
+<%
 		}
-	  %>
+%>
 	<hr>
 </div>
+
+<%
+		}
+%> <%-- Permission Checking end --%>
 
 <!-- AUI Script For IFrame POPUP -->
 <aui:script position="inline" use="aui-base">
@@ -200,6 +213,7 @@ popupButton.on('click',
 					                   		console.log(response);
 					                   		document.getElementById('customers').children[0].remove();
 					                   		document.getElementById('customers').innerHTML = context;
+					                   		document.getElementById("noResult").remove()
 					                   },
 					                   failure: function() {
 
